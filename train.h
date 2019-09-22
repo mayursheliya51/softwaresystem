@@ -99,14 +99,14 @@ void deleteTrain(){
         {
           lseek(fd,p,SEEK_CUR);
           break;
-        //   if(!read(fd,&t,p)){
-        //      ftruncate(fd,p); 
-        //      return;
-        //   }else{
-        //     lseek(fd,-p,SEEK_CUR);
-        //     p = 2*p;
-        //     break;
-        //   }  
+          if(!read(fd,&t,p)){
+             ftruncate(fd,p); 
+             return;
+          }else{
+            lseek(fd,-p,SEEK_CUR);
+            p = 2*p;
+            break;
+          }  
         }   
     }
     while(read(fd,&t,sizeof(t))){

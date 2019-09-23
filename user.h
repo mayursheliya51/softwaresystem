@@ -7,10 +7,15 @@ typedef struct user
     int type; //1->administrator,2->agent,3->customer
 } user;
 
+char* userId;
+
 int isUserExist(char*);
 void regUser();
 void adminPanel();
-int login();
+void bookTicket(char*);
+user login();
+void viewPreBookings(char*);
+void cancleBookings(char *);
 
 int isUserExist(char name[])
 {
@@ -33,6 +38,23 @@ int isUserExist(char name[])
         printf("Error occured while reading file\n");
         return 0;
     }
+}
+
+user getUserById(char *userId){
+    int fd = open(file, O_RDWR);
+    user u2;
+    if (fd > 0)
+    {
+        while (read(fd, &u2, sizeof(u2)))
+        {
+            if (!strcmp(u2.name, userId))
+            {
+                close(fd);
+                return u2;
+            }
+        }
+    }
+   
 }
 
 void regUser()
@@ -67,7 +89,7 @@ void regUser()
 }
 
 
-int login()
+user login()
 {
     user u1, u2;
     printf("Enter username:\n");
@@ -82,7 +104,7 @@ int login()
             if (!strcmp(u2.name, u1.name) && !(strcmp(u2.pass, u1.pass)))
             {
                 close(fd);
-                return u2.type;
+                return u2;
             }
         }
         printf("**Invalid username or password\n");
@@ -92,50 +114,35 @@ int login()
         printf("**Error occured while readin file\n");
     }
     close(fd);
-    return 0;
 }
 
-void bookTicket(){
-    
-}
 
-void viewPreBookings(){
-
-}
 
 void updateBooking(){
 
 }
 
-void cancleBookings(){
 
-}
-
-
-void dashboard(){
+void dashboard(char *userId){
     printf("## 1 Book Ticket\n");
     printf("## 2 View Previous Bookings\n");
-    printf("## 3 Update Booking\n");
-    printf("## 4 Cancel Booking\n");
-    printf("## 5 Exit\n");
+    printf("## 3 Cancel Booking\n");
+    printf("## 4 Exit\n");
     int choice;
 	while(1){
 		scanf("%d", &choice);
 		switch (choice)
 		{
 		case 1:
-            bookTicket();
+            bookTicket(userId);
 			break;
 		case 2:
-			viewPreBookings();
+			viewPreBookings(userId);
 			break;
         case 3:
-			updateBooking();
+			cancleBookings(userId);
 			break;
         case 4:
-			cancleBookings();
-			break;
-        case 5:
 			return;
 		default:
 			printf("Please Enter proper option\n");
